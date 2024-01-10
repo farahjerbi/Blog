@@ -1,15 +1,23 @@
 const express = require('express')
-
-
 const router = express.Router();
-
+const Author = require('../models/author')
 const uplaod = require('../services/uploadFile');
+const bcrypt = require('bcrypt')
+
+router.post('/register',uplaod.single('image'),(req,res)=>{
+
+    const author = new Author({...req.body ,  image: req.file.filename});
+    salt 
+    article.save().then((saved)=>{
+        res.status(200).send(saved);
+    }).catch(err=>{
+        res.status(400).send(err);
+
+    })
+})
 
 
-const Article = require('../models/article')
-
-
-router.post('/add',uplaod.single('image'),(req,res)=>{
+router.post('/login',(req,res)=>{
 
     const article = new Article({...req.body ,  image: req.file.filename});
 
@@ -21,53 +29,32 @@ router.post('/add',uplaod.single('image'),(req,res)=>{
     })
 })
 
-router.get('/getAll',async (req, res ) =>{
-    try{
-        
-        const articles = await Article.find();
 
-        res.status(200).json(articles);
+router.get('/getall',(req,res)=>{
 
-    }catch(err){
-            res.status(404).json({error:err.message});
-    }
-}
-)
+    const article = new Article({...req.body ,  image: req.file.filename});
 
-router.get('/getById/:id',async (req,res)=>{
+    article.save().then((saved)=>{
+        res.status(200).send(saved);
+    }).catch(err=>{
+        res.status(400).send(err);
 
-    let id = req.params.id
-
-    await Article.findOne({_id:id}).then(
-        (articles)=>{
-            res.status(200).send(articles);
-        }
-    ).catch(
-        (err)=>{
-            res.status(400).send(err);
-
-        }
-    )
-    
+    })
 })
 
-router.get('/getByIdAuth/:id',async (req,res)=>{
 
-    let id = req.params.id
+router.get('/getById/:id',(req,res)=>{
 
-    await Article.find({idAuthor:id})
-    .then(
-        (articles)=>{
-            res.status(200).send(articles);
-        }
-    ).catch(
-        (err)=>{
-            res.status(400).send(err);
+    const article = new Article({...req.body ,  image: req.file.filename});
 
-        }
-    )
-    
+    article.save().then((saved)=>{
+        res.status(200).send(saved);
+    }).catch(err=>{
+        res.status(400).send(err);
+
+    })
 })
+
 
 router.delete('/delete/:id',(req,res)=>{
     let id = req.params.id
@@ -105,8 +92,6 @@ router.put('/update/:id',uplaod.single('image'),(req,res)=>{
     )
     
 })
-
-
 
 
 module.exports=router;

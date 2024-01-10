@@ -12,8 +12,10 @@ const article = mongoose.Schema({
         type:String
     },
     date:{
-        type:String
-    },
+        type: Date,
+        default: Date.now
+        },
+        
     content:{
         type:String
     },
@@ -22,7 +24,9 @@ const article = mongoose.Schema({
     }, 
      tags:{
         type:Array
-    }
+    },
+
+
 })
 
 module.exports = mongoose.model("Article" , article)

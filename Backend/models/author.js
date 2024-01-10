@@ -2,7 +2,7 @@ const mongoose=require('mongoose')
 
 
 const Author = mongoose.model('Author',{
-    name:{
+    firstname:{
         type:String
     },
     lastname:{
