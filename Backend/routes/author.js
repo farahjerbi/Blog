@@ -3,12 +3,14 @@ const router = express.Router();
 const Author = require('../models/author')
 const uplaod = require('../services/uploadFile');
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 router.post('/register',uplaod.single('image'),(req,res)=>{
 
     const author = new Author({...req.body ,  image: req.file.filename});
-    salt 
-    article.save().then((saved)=>{
+    salt = bcrypt.genSaltSync(10);
+    author.password = bcrypt.hashSync(author.password , salt);
+    author.save().then((saved)=>{
         res.status(200).send(saved);
     }).catch(err=>{
         res.status(400).send(err);
@@ -19,23 +21,40 @@ router.post('/register',uplaod.single('image'),(req,res)=>{
 
 router.post('/login',(req,res)=>{
 
-    const article = new Article({...req.body ,  image: req.file.filename});
+    let  data = req.body;
 
-    article.save().then((saved)=>{
-        res.status(200).send(saved);
-    }).catch(err=>{
-        res.status(400).send(err);
+    Author.findOne({email:data.email})
+            .then(
+                (author)=>{
+                    let valid = bcrypt.compareSync(data.password,author.password)
+                    if(!valid){
+                        res.send('email or password invalid')
+                    }else{
+                        let payload = {
+                            _id:author.id,
+                            email:author.email,
+                            fullname:author.firstname + '' + author.lastname
+                        }
 
-    })
+                        let token = jwt.sign(payload,'secretKey237')
+                        res.send({mytoken:token})
+                    }
+                }
+            ).catch(
+                err=>{
+                    res.send(err);
+                }
+            )
+
+    
 })
 
 
 router.get('/getall',(req,res)=>{
 
-    const article = new Article({...req.body ,  image: req.file.filename});
-
-    article.save().then((saved)=>{
-        res.status(200).send(saved);
+    Author.find({})
+        .then((authors)=>{
+        res.status(200).send(authors);
     }).catch(err=>{
         res.status(400).send(err);
 
@@ -44,25 +63,24 @@ router.get('/getall',(req,res)=>{
 
 
 router.get('/getById/:id',(req,res)=>{
+    let id = req.params.id
+    Author.findOne({_id:id})
+    .then((author)=>{
+    res.status(200).send(author);
+}).catch(err=>{
+    res.status(400).send(err);
 
-    const article = new Article({...req.body ,  image: req.file.filename});
-
-    article.save().then((saved)=>{
-        res.status(200).send(saved);
-    }).catch(err=>{
-        res.status(400).send(err);
-
-    })
+})
 })
 
 
 router.delete('/delete/:id',(req,res)=>{
     let id = req.params.id
 
-    Article.findByIdAndDelete({_id:id})
+    Author.findByIdAndDelete({_id:id})
     .then(
-        (article)=>{
-            res.status(200).send(article);
+        (author)=>{
+            res.status(200).send(author);
         }
     ).catch(
         (err)=>{
@@ -79,10 +97,10 @@ router.put('/update/:id',uplaod.single('image'),(req,res)=>{
 
     let data = req.body;
 
-    Article.findByIdAndUpdate({_id:id} , data)
+    Author.findByIdAndUpdate({_id:id} , data)
     .then(
-        (article)=>{
-            res.status(200).send(article);
+        (author)=>{
+            res.status(200).send(author);
         }
     ).catch(
         (err)=>{
