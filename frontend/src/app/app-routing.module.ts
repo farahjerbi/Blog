@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { DetailComponent } from './detail/detail.component';
-import { CreateArticleComponent } from './create-article/create-article.component';
+import { CreateArticleComponent } from './pages/create-article/create-article.component';
 import { AboutComponent } from './about/about.component';
-import { PrivaryComponent } from './privary/privary.component';
-import { AuthorComponent } from './author/author.component';
-import { RegisterComponent } from './register/register.component';
-import { LoginComponent } from './login/login.component';
-import { NotfoundComponent } from './notfound/notfound.component';
+import { PrivaryComponent } from './pages/privary/privary.component';
+import { AuthorComponent } from './pages/author/author.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
+import { NotfoundComponent } from './pages/notfound/notfound.component';
+import { DetailComponent } from './pages/detail/detail.component';
 
 const routes: Routes = [
   {path:'',redirectTo:'/home',pathMatch:'full'},
